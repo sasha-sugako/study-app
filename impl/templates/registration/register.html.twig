@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/login.css') }}">
+{% endblock %}
+
+{% block header %}
+    <div class="head">
+        <h1>Registrace</h1>
+        <p><a href="{{ path('main_page') }}">Zpět</a></p>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="form">
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
+
+        {{ form_errors(registrationForm) }}
+
+        {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.login) }}
+            {{ form_row(registrationForm.password) }}
+
+            <button type="submit" class="btn">Registrace</button>
+        {{ form_end(registrationForm) }}
+    </section>
+{% endblock %}

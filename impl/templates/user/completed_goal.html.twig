@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/completed_goal.css') }}">
+{% endblock %}
+
+{% block header %}
+    <h1>Gratulujeme!🎉</h1>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <h2>Splnili jste cíl na tento týden</h2>
+        {% if actual_goal.targetCards %}
+            <p>Prostudoval jste {{ actual_goal.achievedCards }} kartiček</p>
+            <p>Za to získáváte bonus – den pauzy v učení.</p>
+            <div class="bonus" title="Bonus: možnost přeskočit jeden den bez ztráty pokroku">
+                <i class="fa-solid fa-calendar-xmark"></i>
+            </div>
+        {% endif %}
+        {% if actual_goal.targetTests %}
+            <p>Úspěšně jste dokončil {{ actual_goal.achievedTests }} testů</p>
+            <p>Za to získáváte bonus – možnost považovat neúspěšný test za úspěšný pro příští cíl</p>
+            <div class="bonus" title="Bonus: možnost započítat si neúspěšný test jako úspěšný">
+                <i class="fa-solid fa-handshake"></i>
+            </div>
+        {% endif %}
+        <a href="{{ path('goals') }}">Nastavit nový cíl</a>
+    </section>
+{% endblock %}

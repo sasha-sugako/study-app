@@ -1,0 +1,11 @@
+<strong>Cíl nebyl dosažen</strong>
+<br />
+{% if goal.targetCards %}
+    Bylo naučeno {{ goal.achievedCards}} kartiček z {{ goal.targetCards }}.
+{% endif %}
+{% if goal.targetTests %}
+    Bylo úspěšně dokončeno {{ goal.achievedTests}} testů z {{ goal.targetTests }}.
+{% endif %}
+<br />
+Chybělo opravdu jen maličko, ale to nevadí. Příště to určitě zvládnete lépe! 💪
+<a href="{{ absolute_url(path('goals')) }}">Nastavit nový cíl</a>

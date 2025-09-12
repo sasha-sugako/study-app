@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/deck.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/modal.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    <script type="module" src="{{ asset('/scripts/modalInicialize.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+    <section class="menu">
+            <a href="{{ path('decks') }}">Kolekce</a>
+            <a href="{{ path('my_decks') }}">Moje kolekce</a>
+            {% if deck.isPrivate %}
+            <a href="{{ path('deck_tests', {id: deck.id}) }}">Testy</a>
+            {% endif %}
+            <a href="{{ path('stats') }}">Statistiky</a>
+            <a href="{{ path('goals') }}">Moje cíle</a>
+            <a href="{{ path('app_user') }}">Nastaveni</a>
+            <div class="bottom_links">
+                <a href="{{ path('notifications') }}" title="Notifikace"
+                   {% if unread_notifications > 0 %}class="unread"{% endif %}>
+                    <i class="fa-solid fa-bell"></i>
+                </a>
+                <a href="{{ path('logout') }}" title="Odhlásit se"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+    </section>
+    <section class="deck">
+        <div class="deck_info">
+            <h2>{{ deck.name }}</h2>
+            {% if not deck.isPrivate or deck.owner is not same as(app.user) %}
+                <a id="openModal"
+                   data-value="duplicate_collection"
+                   data-collection="{{ deck.name }}"
+                   href="{{ path('deck_clone', {id: deck.id}) }}"
+                   data-url="{{ path('api_deck_clone', {id: deck.id}) }}">Duplikovat</a>
+                <p>Vytvořil: {{ deck.owner.login }}</p>
+            {% else %}
+            <p>Kartiček k nauceni: {{ deck.countOfCardsToStudy }}</p>
+            <a href="{{ path('study', {id: deck.id}) }}">Studovat</a>
+            {% endif %}
+        </div>
+        <div class="deck_edit">
+            {% if deck.isPrivate and
+                deck.owner is same as app.user and
+                deck.countOfStudiedCards == deck.cards|length
+            %}
+                <a id="openModal"
+                   data-value="deck_review"
+                   data-url="{{ path('api_deck_review', {id: deck.id}) }}"
+                   href="{{ path('deck_review', {id: deck.id}) }}"
+                   title="Zanechat recenzi"><i class="fa-solid fa-comment-dots"></i></a>
+            {% endif %}
+            {% if deck.isPrivate and deck.owner is same as(app.user) %}
+                <a id="openModal"
+                   data-value="duplicate_collection"
+                   data-collection="{{ deck.name }}"
+                   href="{{ path('deck_clone', {id: deck.id}) }}"
+                   data-url="{{ path('api_deck_clone', {id: deck.id}) }}"
+                   title="Duplikovat"><i class="fa-solid fa-clone"></i></a>
+            {% endif %}
+            {% if deck.isPrivate and not deck.getParent and deck.cards|length > 0 %}
+                <a id="openModal"
+                   data-value="publicate_collection"
+                   data-collection="{{ deck.name }}"
+                   href="{{ path('deck_publicate', {id: deck.id}) }}"
+                   data-url="{{ path('api_deck_publicate', {id: deck.id}) }}"
+                   title="Publikovat"><i class="fa-solid fa-unlock"></i></a>
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <a id="openModal"
+                   data-value="edit_collection"
+                   data-url="{{ path('api_deck_edit', {id: deck.id}) }}"
+                   href="{{ path('deck_edit', {id: deck.id}) }}"
+                   title="Upravit"><i class="fa-solid fa-pen"></i></a>
+                <a id="openModal"
+                   data-value="remove_collection"
+                   data-collection="{{ deck ? deck.name : null }}"
+                   data-url="{{ path('api_deck_remove', {id: deck.id}) }}"
+                   href="{{ path('deck_remove', {id: deck.id}) }}"
+                   title="Odstarnit"><i class="fa-solid fa-trash"></i></a>
+            {% endif %}
+        </div>
+        {% if not deck.isPrivate and deck.reviews is not empty%}
+                <div class="reviews">
+                    {% for review in deck.reviews %}
+                        <div class="review">
+                            <div class="review_head">
+                                <p>{{ review.reviewedBy.login }}</p>
+                                <div class="stars">
+                                    {% for i in 1..5 %}
+                                        {% if i <= review.rate %}
+                                            <i class="fa-solid fa-star" style="color: gold;"></i>
+                                        {% else %}
+                                            <i class="fa-regular fa-star" style="color: #ccc;"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% if review.description %}
+                                <p>{{ review.description }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+        {% endif %}
+        {% if deck.about %}
+            <p>O kolekci: {{ deck.about }}</p>
+        {% endif %}
+        <div class="cards_head">
+            <p>Kartiček v kolekci: {{ deck.cards|length }}</p>
+            {% if deck.isPrivate or is_granted('ROLE_ADMIN')%}
+            <a id="openCardModal"
+               data-value="card_create"
+               data-url="{{ path('api_card_create', {id_deck: deck.id}) }}"
+               href="{{ path('card_create', {id_deck: deck.id}) }}"
+                title="Přidat kartičku"><i class="fa-solid fa-plus"></i></a>
+            {% endif %}
+        </div>
+        <div class="cards">
+            {% for card in deck.cards %}
+                <div class="card">
+                    <div class="front">
+                        {% if card.frontImage %}
+                            <img src="{{ asset('uploads/img/' ~ card.frontImage) }}" alt="">
+                        {% endif %}
+                        <p>{{ card.frontSide }}</p>
+                    </div>
+                    <p class="back">{{ card.backSide }}</p>
+                    <a id="openModal"
+                       data-value="show_card"
+                       data-url="{{ path('api_card', {id_deck: deck.id, id_card: card.id}) }}"
+                       href="{{ path('card', {id_deck: deck.id, id_card: card.id}) }}"
+                       data-control="{{ edit_collection }}"
+                    ></a>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+    <dialog id="dialog">
+    </dialog>
+    <dialog id="card_dialog">
+    </dialog>
+{% endblock %}

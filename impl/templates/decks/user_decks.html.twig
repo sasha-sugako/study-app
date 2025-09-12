@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/user_decks.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/modal.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    <script type="module" src="{{ asset('/scripts/modalInicialize.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+    <section class="menu">
+        <a href="{{ path('decks') }}">Kolekce</a>
+        <a href="{{ path('stats') }}">Statistiky</a>
+        <a href="{{ path('goals') }}">Moje cíle</a>
+        <a href="{{ path('app_user') }}">Nastaveni</a>
+        <div class="bottom_links">
+            <a href="{{ path('notifications') }}" title="Notifikace"
+               {% if unread_notifications > 0 %}class="unread"{% endif %}>
+                <i class="fa-solid fa-bell"></i>
+            </a>
+            <a href="{{ path('logout') }}" title="Odhlásit se"><i class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+
+    </section>
+    <section class="my_decks">
+        <div class="head">
+            <h2>Moje kolekce</h2>
+            <p><a id="openModal"
+                  data-value="create_collection"
+                  data-url="{{ path('api_deck_create') }}"
+                  href="{{ path('deck_create') }}">Vytvořit novou kolekci</a></p>
+        </div>
+        {% if decks is not empty %}
+            <div class="decks">
+            {% for deck in decks %}
+                <div class="deck">
+                    <h3>{{ deck.Name }}</h3>
+                    <div class="deck_info">
+                        <p>Karticek v kolekci: {{ deck.cards|length }}</p>
+                        <div class="progress_container" title="Počet naučených kartiček">
+                            {% if deck.cards|length > 0 %}
+                                {% set width = (deck.countOfStudiedCards / deck.cards|length) * 100 %}
+                            {% else %}
+                                {% set width = 0 %}
+                            {% endif %}
+                            <div class="progress_bar"
+                                 style="width:{{ width }}%;">
+                            </div>
+                        </div>
+                        <div class="deck_edit">
+                            <a id="openModal"
+                               data-value="edit_collection"
+                               data-url="{{ path('api_deck_edit', {id: deck.id}) }}"
+                               href="{{ path('deck_edit', {id: deck.id}) }}"
+                               title="Upravit"><i class="fa-solid fa-pen"></i></a>
+                            <a id="openModal"
+                               data-value="remove_collection"
+                               data-collection="{{ deck ? deck.name : null }}"
+                               data-url="{{ path('api_deck_remove', {id: deck.id}) }}"
+                               href="{{ path('deck_remove', {id: deck.id}) }}"
+                               title="Odstarnit"><i class="fa-solid fa-trash"></i></a>
+                            <a href="{{ path('deck', {id:deck.id}) }}"
+                               title="Prostudovat"><i class="fa-solid fa-play"></i></a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <p>Žádná kolekce nebyla nalezena</p>
+        {% endif %}
+    </section>
+    <dialog id="dialog"></dialog>
+{% endblock %}

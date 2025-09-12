@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/form.css') }}">
+{% endblock %}
+
+{% block header %}
+    <div class="head">
+        <h1>{{ title }}</h1>
+        <p><a href="{{ path('card', {id_deck: card.deck.id, id_card: card.id}) }}">Zpet</a></p>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="form">
+        <p>Skutečně si přejete odstranit kartičku <strong>{{ card.frontSide }}</strong>?</p>
+        {{ form(form) }}
+    </section>
+{% endblock %}

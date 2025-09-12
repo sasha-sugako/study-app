@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/decks.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="head">
+        <h2>Všechny kolekce</h2>
+        <div class="navigation">
+            <a href="{{ path('my_decks') }}">Moje kolekce</a>
+            <a href="{{ path('logout') }}" title="Odhlásit se"><i class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+
+    </div>
+    <section class="filter">
+        {{ form_start(filter) }}
+        {{ form_rest(filter) }}
+        {{ form_errors(filter) }}
+        <button type="submit">Vyhledat</button>
+        {{ form_end(filter) }}
+    </section>
+    {% if decks is not empty %}
+        <div class="decks">
+        {% for deck in decks %}
+            <div class="deck">
+                <h3>{{ deck.name }}</h3>
+                <p> Hodnocení:
+                    {% set totalScore = 0 %}
+                    {% for review in deck.reviews %}
+                        {% set totalScore = totalScore + review.rate %}
+                    {% endfor %}
+                    {% if deck.reviews|length > 0 %}
+                        {{ (totalScore / deck.reviews|length)|number_format(1, '.', '') }}/5
+                    {% else %}
+                        0/5
+                    {% endif %}
+                </p>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <p>Patří: {{ deck.owner.login }}</p>
+                    <p>{% if deck.isPrivate %} Privátní
+                        {% else %} Veřejná
+                        {% endif %}</p>
+                {% endif %}
+                <div class="deck_categories">
+                    {% for category in deck.categories %}
+                        <p class="deck_category">{{ category.name }}</p>
+                    {% endfor %}
+                </div>
+                <a href="{{ path('deck', {id: deck.id}) }}"></a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Žádná kolekce nebyla nalezena</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/goals.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/modal.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    <script type="module" src="{{ asset('/scripts/modalInicialize.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+    <section class="menu">
+        <a href="{{ path('decks') }}">Kolekce</a>
+        <a href="{{ path('my_decks') }}">Moje kolekce</a>
+        <a href="{{ path('stats') }}">Statistiky</a>
+        <a href="{{ path('app_user') }}">Nastaveni</a>
+        <div class="bottom_links">
+            <a href="{{ path('notifications') }}" title="Notifikace"
+               {% if unread_notifications > 0 %}class="unread"{% endif %}>
+                <i class="fa-solid fa-bell"></i>
+            </a>
+            <a href="{{ path('logout') }}" title="Odhlásit se"><i class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+    </section>
+    <section class="goals">
+        <h2>Moje cíle</h2>
+        <div class="actual_goal">
+            <h3>Aktuální cíl</h3>
+            {% if actual_goal %}
+                {% if actual_goal.targetCards %}
+                    <p>Prostudovat {{ actual_goal.targetCards }} kartiček</p>
+                    <div class="progress_container" title="Počet prostudovaných kartiček za týden">
+                        <div class="progress_bar" style="width:
+                        {% if actual_goal.achievedCards >= actual_goal.targetCards  %}100{% else %}{{100*actual_goal.achievedCards/actual_goal.targetCards}}{% endif %}%;">
+                            {% if actual_goal.achievedCards > 0 %}
+                                {{ actual_goal.achievedCards }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if actual_goal.targetTests %}
+                    <p>Úspěšně dokončit {{ actual_goal.targetTests }} testů</p>
+                    <p>Za úspěšný se považuje test, pokud je správně zodpovězeno alespoň tři čtvrtiny otázek </p>
+                    <div class="progress_container" title="Počet dokončených testů za týden">
+                        <div class="progress_bar" style="width:
+                        {% if actual_goal.achievedTests >= actual_goal.targetTests  %}100{% else %}{{100*actual_goal.achievedTests/actual_goal.targetTests}}{% endif %}%;">
+                            {% if actual_goal.achievedTests > 0 %}
+                                {{ actual_goal.achievedTests }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                <p>Do: <time datetime="{{ actual_goal.endDate|date('Y-m-d') }}">{{ actual_goal.endDate|date('d.m.Y') }}</time></p>
+            {% else %}
+               <p>Nemáte nastavený cíl na tento týden</p>
+                <a id="openModal"
+                   data-value="create_goal"
+                   href="{{ path('new_goal') }}"
+                   data-url="{{ path('api_new_goal') }}">
+                    Nastavit</a>
+            {% endif %}
+        </div>
+        <div class="goals_info">
+            <p>Cíle jsou nastaveny na týden, ale můžete je dokončit i dříve, pokud je splníte v kratším čase.</p>
+            <p>Za splnění cílů získáte odměny</p>
+            <ul>
+                <li>Za naučené kartičky získáte možnost přeskočit jeden den bez ztráty pokroku</li>
+                <li>Za úspěšně dokončený test (úspěšný je ten, u kterého odpovíte správně alespoň na tři čtvrtiny otázek) získáte možnost započítat si neúspěšný test jako úspěšný</li>
+            </ul>
+        </div>
+        {% if previous_goals is not empty %}
+        <div class="previous_goals">
+            <h3>Předchozí cíle</h3>
+            {% for goal in previous_goals %}
+                <div class="goal">
+                    {% if goal.targetCards %}
+                        <div class="cards">
+                            <p>Prostudovat {{ goal.targetCards }} kartiček</p>
+                            <div class="progress_container" title="Počet prostudovaných kartiček za týden">
+                                <div class="progress_bar" style="width: {% if goal.achievedCards >= goal.targetCards  %}100{% else %}{{100*goal.achievedCards/goal.targetCards}}{% endif %}%;">
+                                    {% if goal.achievedCards > 0 %}
+                                        {{ goal.achievedCards }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if goal.bonusGranted %}
+                                <div class="bonus" title="Bonus: možnost přeskočit jeden den bez ztráty pokroku">
+                                    <i class="fa-solid fa-calendar-xmark"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    {% if goal.targetTests %}
+                        <div class="tests">
+                            <p>Úspěšně dokončit {{ goal.targetTests }} testů</p>
+                            <div class="progress_container" title="Počet dokončených testů za týden">
+                                <div class="progress_bar" style="width: {% if goal.achievedTests >= goal.targetTests  %}100{% else %}{{100*goal.achievedTests/goal.targetTests}}{% endif %}%;">
+                                    {% if goal.achievedTests > 0 %}
+                                        {{ goal.achievedTests }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if goal.bonusGranted %}
+                                <div class="bonus" title="Bonus: možnost započítat si neúspěšný test jako úspěšný">
+                                    <i class="fa-solid fa-handshake"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    <div class="time">
+                        <p>Od: <time datetime="{{ goal.startDate|date('Y-m-d') }}">{{ goal.startDate|date('d.m.Y') }}</time></p>
+                        <p>{% if goal.completed %}Splněno{% else %}Do{% endif %}: <time datetime="{{ goal.endDate|date('Y-m-d') }}">{{ goal.endDate|date('d.m.Y') }}</time></p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+    <dialog id="dialog">
+        <button id="closeModal">❌</button>
+    </dialog>
+{% endblock %}

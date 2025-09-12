@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/form.css') }}">
+{% endblock %}
+
+{% block header %}
+    <div class="head">
+        <h1>Málo kartiček</h1>
+        <p><a href="{{ path('deck', {id: deck.id}) }}">Zpet</a></p>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="note">
+        <p>Než bude možné vytvořit takový test, je potřeba nejprve dostatečně pokročit ve studiu kartiček</p>
+    </section>
+{% endblock %}

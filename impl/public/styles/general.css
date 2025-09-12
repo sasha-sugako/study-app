@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+:root{
+    font-size: 14pt;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: rgba(168, 228, 160, 0.41);
+    font-family: 'Open Sans', sans-serif;
+}
+
+body > header{
+    text-align: center;
+    flex: 1;
+    background-color: #f3fbf2;
+    border-radius: 1rem;
+}
+
+body > main{
+    flex: 8;
+    display: flex;
+    margin: 1rem;
+    gap: 1rem;
+}
+
+body > footer{
+    text-align: center;
+    flex: 1;
+}
+
+a {
+    color: #84d978;
+    text-decoration: none;
+}
+
+a[href^="#"]{
+    color: #787878;
+}
+
+/* a:hover{
+    color: #333333;
+}*/
+
+h1, h2, h3{
+    font-family: 'Poppins', sans-serif;
+}

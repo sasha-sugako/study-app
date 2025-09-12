@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/card.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="head">
+        <h2>{{ card.deck.name }}</h2>
+        <p><a href="{{ path('deck', {id: card.deck.id}) }}">Zpět</a></p>
+    </div>
+    <section class="card">
+        <div class="card_edit">
+            <a href="{{ path('card_copy', {id_deck: card.deck.id, id_card: card.id}) }}"><i class="fa-solid fa-share"></i></a>
+            {% if is_granted('ROLE_ADMIN') or card.deck.owner is same as app.user  %}
+            <a href="{{ path('card_edit', {id_deck: card.deck.id, id_card: card.id}) }}"><i class="fa-solid fa-pen"></i></a>
+            <a href="{{ path('card_remove', {id_deck: card.deck.id, id_card: card.id}) }}"><i class="fa-solid fa-trash"></i></a>
+            {% endif %}
+        </div>
+        <div class="cards_sides">
+            <div class="front">
+                {% if card.frontImage %}
+                    <img src="{{ asset('uploads/img/' ~ card.frontImage) }}" alt="">
+                {% endif %}
+                <p>{{ card.frontSide }}</p>
+            </div>
+            <div class="back">
+                {% if card.backImage %}
+                    <img src="{{ asset('uploads/img/' ~ card.backImage) }}" alt="">
+                {% endif %}
+                <p>{{ card.backSide }}</p>
+            </div>
+        </div>
+    </section>
+{% endblock %}

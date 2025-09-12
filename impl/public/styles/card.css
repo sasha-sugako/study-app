@@ -1,0 +1,68 @@
+@charset "UTF-8";
+
+main{
+    display: flex;
+    flex-direction: column;
+}
+
+.head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.head h2{
+    margin: auto;
+    text-align: center;
+}
+
+.head a{
+    margin-left: auto;
+}
+
+.card{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.cards_sides{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.front, .back{
+    width: 60%;
+    min-height: 4rem;
+    background-color: #f3fbf2;
+    border-radius: 1rem;
+    text-align: center;
+    align-content: center;
+    gap: 1rem}
+
+.card_edit{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.front img, .back img{
+    width: 75%;
+    height: auto;
+    margin: 1rem;
+    border-radius: 0.4rem;
+}
+
+.front > *:not(:first-child), .back > *:not(:first-child){
+    margin-top: 0;
+}
+
+@media screen and (max-width: 60rem){
+    .front, .back{
+        width: 80%;
+    }
+}

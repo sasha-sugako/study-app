@@ -1,0 +1,38 @@
+main{
+    flex-direction: column;
+    h1{
+        text-align: center;
+    }
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f3fbf2;
+    border-radius: 1rem;
+    padding: 2rem;
+    a{
+        background-color: #9ee195;
+        border-radius: 0.4rem;
+        margin: 0.5rem;
+        padding: 0.5rem 4rem;
+        color: black;
+        &:hover{
+            background-color: #369229;
+            font-size: 1em;
+        }
+    }
+    .bonus{
+        padding: 0.5rem;
+        width: 2rem;
+        border-radius: 50%;
+        background-color: #369229;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        i{
+            color: white;
+        }
+    }
+}

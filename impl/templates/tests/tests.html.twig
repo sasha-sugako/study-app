@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/tests.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="head">
+        <h2>Testy pro kolekci {{ deck.name }}</h2>
+        <p><a href="{{ path('deck', {id: deck.id}) }}">Zpět</a></p>
+    </div>
+    <section class="my_tests">
+        <div class="create_test">
+            <div class="test_choice">
+                {{ form_start(form) }}
+                {{ form_errors(form) }}
+                {{ form_rest(form) }}
+                <button type="submit">Spustit test</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+        {% if deck.tests is not empty %}
+            <div class="tests">
+                <p>Za úspěšný se považuje test, pokud je správně zodpovězeno alespoň tři čtvrtiny otázek </p>
+                {% for test in deck.tests|sort((a, b) => b.startedAt <=> a.startedAt) %}
+                    <div class="test">
+                        {% if test.finishedAt %}
+                            <p>Dokončen: <time datetime="{{ test.finishedAt|date('Y-m-d') }}">{{ test.finishedAt|date('H:i d.m.Y') }}</time></p>
+                            {% set answered = 0 %}
+                            {% for res in test.testResults %}
+                                {% if res.isCorrect %}
+                                    {% set answered = answered + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            <div class="res">
+                                <div class="progress_container">
+                                    <div class="progress_bar" style="width:{{ 100*answered/test.numberOfQuestions }}%;">
+                                        {% if answered > 0 %}
+                                            {{ answered }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <p>{{ test.numberOfQuestions }}</p>
+                            </div>
+
+                            <a href="{{ path('deck_test_results', {id_deck: deck.id, id_test: test.id}) }}">Zobrazit vysledky</a>
+                        {% else %}
+                            <p>Začat: <time datetime="{{ test.startedAt|date('Y-m-d') }}">{{ test.startedAt|date('H:i d.m.Y') }}</time></p>
+                            {% if deck.owner is same as app.user %}
+                                <a href="{{ path('deck_test', {id_deck: deck.id, id_test: test.id}) }}">Dokončit</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Žádné testy nebyli nalezeni</p>
+        {% endif %}
+    </section>
+{% endblock %}

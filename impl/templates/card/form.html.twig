@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/form.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/card_form.css') }}">
+{% endblock %}
+
+{% block header %}
+    <div class="head">
+        <h1>{{ title }}</h1>
+        {% if card.id %}
+            <p><a href="{{ path('card', {id_deck: deck.id, id_card: card.id}) }}">Zpět</a></p>
+        {% else %}
+        <p><a href="{{ path('deck', {id: deck.id}) }}">Zpět</a></p>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="form">
+        {{ form_start(form) }}
+        <div>
+                {{ form_label(form.front_side) }}
+                {{ form_widget(form.front_side) }}
+                {{ form_errors(form.front_side) }}
+        </div>
+        <div class="front_image">
+            {% if card.frontImage %}
+                <p>Změnit obrázek</p>
+            {% else %}
+                <p>Přidejte obrázek</p>
+            {% endif %}
+                {{ form_widget(form.front_image) }}
+                {{ form_errors(form.front_image) }}
+            {% if card.frontImage %}
+                <div>
+                    <img src="{{ asset('uploads/img/' ~ card.frontImage) }}" alt="">
+                    <br>
+                    {{ form_row(form.remove_front_image) }}
+                </div>
+            {% endif %}
+        </div>
+        <div>
+                {{ form_label(form.back_side) }}
+                {{ form_widget(form.back_side) }}
+                {{ form_errors(form.back_side) }}
+        </div>
+        <div class="back_image">
+            {% if card.backImage %}
+                <p>Změnit obrázek</p>
+            {% else %}
+                <p>Přidejte obrázek</p>
+            {% endif %}
+            {{ form_widget(form.back_image) }}
+            {{ form_errors(form.back_image) }}
+            {% if card.backImage %}
+                <div>
+                    <img src="{{ asset('uploads/img/' ~ card.backImage) }}" alt="">
+                    <br>
+                    {{ form_row(form.remove_back_image) }}
+                </div>
+            {% endif %}
+        </div>
+        {{ form_errors(form) }}
+        {{ form_rest(form) }}
+        <button type="submit">{{ card ? 'Upravit' : 'Vytvořit' }}</button>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}

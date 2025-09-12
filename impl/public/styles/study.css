@@ -1,0 +1,160 @@
+@charset "UTF-8";
+
+main{
+    display: flex;
+    flex-direction: column;
+}
+
+.head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.head h2{
+    margin: auto;
+    text-align: center;
+}
+
+.head a{
+    margin-left: auto;
+}
+
+.show_card{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width:100%;
+    align-items: center;
+    position: relative;
+}
+
+.show_card>a{
+    position: absolute;
+    top: 4rem;
+}
+
+.left{
+    left: 0;
+}
+
+.right{
+    right: 0;
+}
+
+.card{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    align-items: center;
+}
+
+.card a{
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: #9ee195;
+    color: black;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.front, .back{
+    background-color: #f3fbf2;
+    border-radius: 1rem;
+    text-align: center;
+    align-content: center;
+    min-height: 9rem;
+    width: 70%;
+    img{
+        width: 50%;
+        height: auto;
+        margin: 1rem;
+        border-radius: 0.4rem;
+    }
+}
+
+.back{
+    display: none;
+}
+
+.form form{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+.form div{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+#study_form_learn_score {
+    display: flex;
+    gap: 1rem;
+}
+
+#study_form_learn_score input {
+    display: none;
+}
+
+#study_form_learn_score label {
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #9ee195;
+    background-color: #f3fbf2;
+    color: black;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+#study_form_learn_score label:hover {
+    background-color: #369229;
+    color: black;
+}
+
+#study_form_learn_score input:checked + label {
+    background-color: #9ee195;
+    color: black;
+}
+
+.form button{
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: #9ee195;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+}
+
+.form button:hover{
+    background-color: #369229;
+}
+
+@media screen and (max-width: 43rem){
+    .form form{
+        flex-direction: column;
+        align-items: center;
+        div{
+            flex-direction: column;
+            align-items: center;
+        }
+        #study_form_learn_score{
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+}

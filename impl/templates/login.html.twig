@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/login.css') }}">
+{% endblock %}
+
+{% block header %}
+    <div class="head">
+        <h1>Přihlášení</h1>
+        <p><a href="{{ path('main_page') }}">Zpět</a></p>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+    <section class="form">
+        <form action="{{ path('login') }}" method="post">
+            <label>
+                Login
+                <input name="_username" type="text" required>
+            </label>
+            <label>
+                Heslo
+                <input name="_password" type="password" required>
+            </label>
+            <button name="submit" type="submit">Login</button>
+        </form>
+    </section>
+{% endblock %}

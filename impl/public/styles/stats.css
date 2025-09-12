@@ -1,0 +1,145 @@
+@charset "UTF-8";
+
+main{
+    display: flex;
+    flex-direction: column;
+}
+
+.head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.head h2{
+    margin: auto;
+    text-align: center;
+}
+
+.head a{
+    margin-left: auto;
+}
+
+h3, h4{
+    text-align: center;
+}
+
+.chart_container{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    max-height: 20rem;
+    min-height: 15rem;
+}
+
+canvas{
+    display: none;
+    max-width: 70%;
+}
+
+.bonuses{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    .day_bonus, .test_bonus{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        padding: 0.5rem 1rem 0.5rem 1rem;
+        align-items: center;
+        background-color: #f3fbf2;
+        border-radius: 4rem;
+    }
+    .bonus{
+        padding: 0.5rem;
+        width: 2rem;
+        border-radius: 50%;
+        background-color: #a8e4a0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        i{
+            color: white;
+        }
+    }
+}
+
+.for_tests{
+    display: none;
+}
+
+.total{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f3fbf2;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.per_decks, .week_stats{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.per_deck, .week_day{
+    display: flex;
+    padding: 1rem;
+    align-items: center;
+    flex-direction: column;
+    background-color: #f3fbf2;
+    border-radius: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    p{
+        margin: 0.3rem;
+    }
+}
+
+.deck_stats{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.continuous_learning{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    max-width: 200px;
+}
+.day {
+    width: 25px;
+    height: 25px;
+    border-radius: 3px;
+    background-color: rgba(243, 251, 242, 0.7);
+    i{
+        padding: 0 0 0.225rem 0.225rem;
+    }
+}
+.day.learned {
+    background-color: #a8e4a0;
+}
+
+@media screen and (max-width: 43rem){
+    .chart_container{
+        height: 20rem;
+        #weekStatsChart{
+            display: block;
+            width:90%;
+            max-width: 100%;
+        }
+    }
+    .continuous_learning{
+        justify-content: flex-start;
+    }
+}

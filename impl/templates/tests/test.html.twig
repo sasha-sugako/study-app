@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/test.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="head">
+        <h2>Test pro kolekci {{ test.deck.name }}</h2>
+        <p><a href="{{ path('deck_tests', {id: test.deck.id}) }}">Zpět</a></p>
+    </div>
+    <div class="show_test">
+        {% if test.qurrentQuestion > 0 %}
+        <a class="left" href="{{ path('deck_test_previous', {id_deck: test.deck.id, id_test: test.id}) }}">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        {% endif %}
+        <div class="test_with_end">
+            <section class="test">
+                {% if question.questionType == 1 %}
+                    <p>Zvolte význam pro {{question.card.frontSide}}</p>
+                {% elseif question.questionType == 2 %}
+                    <p>Termín {{question.card.frontSide}} znamená {{ term }}. Pravda nebo lež?</p>
+                {% else %}
+                    <p>Napište význam pro {{question.card.frontSide}}</p>
+                {% endif %}
+                {{ form_start(answer) }}
+                {{ form_errors(answer) }}
+                {{ form_rest(answer) }}
+                <button type="submit">
+                    {% if test.qurrentQuestion < test.numberOfQuestions - 1 %}
+                        Odpovědět
+                    {% else %}
+                        Dokončit test
+                    {% endif %}
+                </button>
+                {{ form_end(answer) }}
+            </section>
+            {% if test.qurrentQuestion < test.numberOfQuestions - 1 %}
+            <a class="end_test" href="{{ path('deck_test_results', {id_deck: test.deck.id, id_test: test.id}) }}">
+                Dokončit test
+            </a>
+            {% endif %}
+        </div>
+        {% if test.qurrentQuestion < test.numberOfQuestions - 1 %}
+        <a class="right" href="{{ path('deck_test_next', {id_deck: test.deck.id, id_test: test.id}) }}">
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        {% endif %}
+    </div>
+{% endblock %}

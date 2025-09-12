@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/test.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/modal.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    <script type="module" src="{{ asset('/scripts/modalInicialize.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+    <div class="head">
+        <h2>Test pro kolekci {{ test.deck.name }}</h2>
+        <p><a href="{{ path('deck_tests', {id: test.deck.id}) }}">Zpět</a></p>
+    </div>
+    <section class="test">
+        {% for result in test.testResults|sort((a, b) => a.id <=> b.id) %}
+            <div class="result">
+                <p>{{ result.questionNumber + 1}}.
+                    {% if result.isCorrect %}
+                    <i id="correct" class="fa-solid fa-check"></i></p>
+                    {% else %}
+                    <i id="wrong" class="fa-solid fa-xmark"></i></p>
+                <p>Typ otázky:
+                   {% if result.questionType is same as(1) %}
+                      Výběr z možností
+                   {% elseif result.questionType is same as(2)  %}
+                      Pravda nebo lež
+                   {% else %}
+                       Úplné doplnění
+                   {% endif %}
+                </p>
+                        <div class="wrong_info">
+                            <p>Správná odpověď:
+                                {% if result.correctAnswer[0] is same as(true) %}
+                                    Pravda
+                                {% elseif result.correctAnswer[0] is same as(false) %}
+                                    Lež
+                                {% else %}
+                                    {{ result.correctAnswer[0] }}
+                                {% endif %}
+                            </p>
+                            <p>Odpověď uživatele:
+                                {% if result.userAnswer is not empty %}
+                                    {% if result.userAnswer[0] is same as(false) %}
+                                        Lež
+                                    {% else %}
+                                        {{ result.userAnswer[0] }}
+                                    {% endif %}
+                                {% endif %}
+                            </p>
+                            {% if result.card %}
+                            <a id="openModal"
+                               data-value="show_card"
+                               data-url="{{ path('api_card', {id_deck: test.deck.id, id_card: result.card.id}) }}"
+                               href="{{ path('card', {id_deck: test.deck.id, id_card: result.card.id}) }}"
+                                data-control="true">
+                                Zobrazit kartu</a>
+                            {% endif %}
+                        </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </section>
+    <dialog id="dialog">
+        <button id="closeModal">❌</button>
+    </dialog>
+    <dialog id="card_dialog">
+        <button id="closeCardModal">❌</button>
+    </dialog>
+{% endblock %}

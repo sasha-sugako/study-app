@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/main.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="head">
+        <h2>Kartičky pro studium slov na různá témata</h2>
+        <p>Začněte hned teď</p>
+    </div>
+    {% if app.user %}
+        <h3>Váš pokrok</h3>
+        <p>Počet studovaných kartiček: {{ stats.total_studied }}</p>
+        <p>Počet dokončených testů: {{ stats.total_tests }}</p>
+        <div class="decks">
+            <a href="{{ path('decks') }}">Všechny kolekce</a>
+            <a href="{{ path('my_decks') }}">Moje kolekce</a>
+            <a href="{{ path('goals') }}">Moje cíle</a>
+            <a href="{{ path('app_user') }}">Nastaveni</a>
+        </div>
+        <a href="{{ path('logout') }}">Odhlásit se</a>
+    {% else %}
+        <div class="enter">
+            <a href="{{ path('register') }}">Registrace</a>
+            <a href="{{ path('login') }}">Přihlásit</a>
+        </div>
+    {% endif %}
+{% endblock %}

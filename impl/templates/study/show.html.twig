@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/study.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('/scripts/show_other_side.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="head">
+        <h2>{{ card.deck.name }}</h2>
+        <p><a href="{{ path('deck', {id: card.deck.id}) }}">Zpět</a></p>
+    </div>
+    <div class="show_card">
+        <section class="card">
+            <div class="front">
+                {% if card.frontImage %}
+                    <img src="{{ asset('uploads/img/' ~ card.frontImage) }}" alt="">
+                {% endif %}
+                <p>{{ card.frontSide }}</p>
+            </div>
+            <a id="showOtherSide" href="#">Zobrazit zadní stranu</a>
+            <div class="back">
+                {% if card.backImage %}
+                    <img src="{{ asset('uploads/img/' ~ card.backImage) }}" alt="">
+                {% endif %}
+                <p>{{ card.backSide }}</p>
+            </div>
+            <div class="form">
+                {{ form_start(form) }}
+                {{ form_errors(form) }}
+                {{ form_rest(form) }}
+                <button type="submit">Podtvrdit</button>
+                {{ form_end(form) }}
+            </div>
+        </section>
+    </div>
+{% endblock %}

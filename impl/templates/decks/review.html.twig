@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/form.css') }}">
+{% endblock %}
+
+{% block header %}
+    <div class="head">
+        <h1>Zanechat recenzi</h1>
+        <p><a href="{{ path('deck', {id: deck.id}) }}">Zpět</a></p>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="form">
+        {{ form_start(form) }}
+        <div>
+            <label class="required">Hodnocení kolekce</label>
+            <div class="rating">
+                {% for child in form.rate %}
+                    {{ form_widget(child) }}
+                    <label for="{{ child.vars.id }}"><i class="fa-solid fa-star"></i></label>
+                {% endfor %}
+            </div>
+        </div>
+        {{ form_errors(form) }}
+        {{ form_rest(form) }}
+        <button type="submit">Potvrdit</button>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}

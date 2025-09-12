@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/stats.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ asset('scripts/charts.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="head">
+        <h2>Statistika</h2>
+        <p><a href="{{ path('my_decks') }}">Zpět</a></p>
+    </div>
+    <div class="statistics">
+        <h3>Bonusy</h3>
+        <div class="bonuses">
+            <div class="day_bonus">
+                {{ bonuses.day_bonuses }}
+                <div class="bonus" title="Bonus: možnost přeskočit jeden den bez ztráty pokroku">
+                    <i class="fa-solid fa-calendar-xmark"></i>
+                </div>
+            </div>
+            <div class="test_bonus">
+                {{ bonuses.test_bonuses }}
+                <div class="bonus" title="Bonus: možnost započítat si neúspěšný test jako úspěšný">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+            </div>
+        </div>
+        <h3>Aktuální série dní nepřetržitého učení</h3>
+        <div class="continuous_learning">
+            <p>Učíte se nepřetržitě již {{ user.DaysWithoutBreak }} dní</p>
+            <div class="calendar">
+                {% set year = "now"|date("Y") %}
+                {% set month = "now"|date("m") %}
+                {% set days_in_month = date(year ~ '-' ~ month ~ '-01')|date("t") %}
+
+                {% for day in 1..days_in_month %}
+                    {% set day_str = (year ~ '-' ~ month ~ '-' ~ "%02d"|format(day)) %}
+                    <div class="day {% if day_str in continuous_learning %}learned{% endif %}" title="{{ day_str }}">
+                        {% if day_str in continuous_learning  %}
+                            {% if day_str in bonus_dates %}
+                                <div class="bonus" title="Bonus: možnost přeskočit jeden den bez ztráty pokroku">
+                                    <i class="fa-solid fa-calendar-xmark"></i>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <h3>Studijní statistika za den</h3>
+        <div class="chart_container">
+            <canvas id="overallStatsChart"></canvas>
+        </div>
+        <div class="total">
+            <p>Počet studovaných kartiček: {{ total_studied }}</p>
+            <p>Počet kartiček k naučení: {{ total_to_study }}</p>
+            <p>Počet dokončených testů: {{ total_tests }}</p>
+        </div>
+        <h4>Studijní statistika podle kolekci</h4>
+        <div class="chart_container">
+            <canvas id="deckStatsChart"></canvas>
+        </div>
+        <div class="per_decks">
+            {% for stat in stats %}
+                <div class="per_deck">
+                    <p>{{ stat.deck_name }}</p>
+                    <div class="deck_stats">
+                        <p>Studovaných kartiček: {{ stat.studied_cards }}</p>
+                        <p>Kartiček k naučení: {{ stat.cards_to_study }}</p>
+                        <p>Dokončených testů: {{ stat.tests }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <h4 class="for_tests">Statistiky z testů</h4>
+        <div class="chart_container">
+            <canvas id="testsStatsChart"></canvas>
+        </div>
+        <h4 class>Pokrok za posledních 7 dní</h4>
+        <div class="chart_container">
+            <canvas id="weekStatsChart"></canvas>
+        </div>
+        <div class="week_stats">
+            {% for day in week_stats %}
+                <div class="week_day">
+                    <p>Datum: <time datetime="{{ day.date|date('Y-m-d') }}">{{ day.date|date('d.m.Y') }}</time></p>
+                    <p>Počet studovaných kartiček: {{ day.total_studied }}</p>
+                    <p>Počet dokončených testů: {{ day.total_tests }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        document.querySelector('.total').style.display = 'none';
+        document.querySelector('.per_decks').style.display = 'none';
+        document.querySelector('.week_stats').style.display = 'none';
+        document.querySelectorAll('.chart_container').forEach(el => el.style.display = 'flex');
+        document.getElementById("overallStatsChart").style.display = "block";
+        document.getElementById("deckStatsChart").style.display = "block";
+        document.getElementById("testsStatsChart").style.display = "block";
+        document.getElementById("weekStatsChart").style.display = "block";
+        document.querySelector('.for_tests').style.display = 'block';
+        document.addEventListener("DOMContentLoaded", function () {
+            initCharts(
+                    {{ total_studied }},
+                    {{ total_to_study }},
+                    {{ stats|json_encode|raw }},
+                    {{ week_stats|json_encode|raw }}
+            );
+        });
+    </script>
+{% endblock %}

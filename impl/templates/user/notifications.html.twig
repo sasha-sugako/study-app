@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/styles/notifications.css') }}">
+{% endblock %}
+
+{% block header %}
+    <div class="head">
+        <h1>Notifikace</h1>
+        <p><a href="{{ path('my_decks') }}">Zpět</a></p>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="notifications">
+            {% if notifications is not empty %}
+                {% for notif in notifications|sort((a, b) => b.createdAt <=> a.createdAt) %}
+                    <div class="notification {% if not notif.isRead %} not_read{% endif %}">
+                        <p>{{ notif.message }}</p>
+                        <p><time datetime="{{ notif.createdAt|date('Y-m-d') }}">{{ notif.createdAt|date('d.m.Y') }}</time></p>
+                        <a href="{{ path('read_notification', {id: notif.id}) }}"></a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Žádné nové oznámení</p>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
