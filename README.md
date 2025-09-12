@@ -1,86 +1,58 @@
-# Návod pro spuštění
+# Web Application for Learning Words and Technical Terms
 
-## 1. Rozbalení archivu
+This project was created as a **Bachelor’s thesis** focused on modern digital education.  
+The application is designed for effective vocabulary and terminology learning using **digital flashcards**, combining spaced repetition, quizzes, and gamification.
 
-Nejprve rozbalte archiv do požadovaného adresáře.
+---
 
-Přejděte do adresáře s implementací:
+## Key Features
 
-```bash
-cd prilohy\impl
-```
+- **Digital Flashcards** – each card has two sides (question–answer) and can include text as well as images.
+- **Collections** – organize flashcards into thematic groups, with options to manage and share them.
+- **Spaced Repetition** – the system tracks memory retention and dynamically schedules reviews.
+- **Interactive Quizzes** – various question types (multiple choice, fill-in-the-blank, true/false).
+- **Gamification** – weekly goals, rewards, and bonuses to boost motivation and consistency.
+- **Progress & Statistics** – clear charts and stats by collection and daily activity.
 
-## 2. Instalace závislostí
+---
 
-Nainstalujte PHP balíčky pomocí Composeru:
+## Technologies Used
 
-```bash
-composer install
-```
+- **Backend:** PHP (Symfony), Doctrine ORM
+- **Frontend:** HTML, Twig, CSS, JavaScript
+- **Database:** PostgreSQL
+- **Other:** responsive design, usability testing
 
-## 3. Nastavení prostředí
+---
 
-Symfony používá soubor .env pro konfiguraci prostředí, včetně připojení k databázi a e-mailovému serveru..
+## Application Screenshots
 
-Otevřete soubor .env a nastavte následující proměnné:
+### Collections and flashcards
 
-```dotenv
-DATABASE_URL="postgresql://[username]:[password]@127.0.0.1:5432/[db_name]?serverVersion=16&charset=utf8"
-MAILER_DSN="smtp://[your_username]:[your_password]@[smtp.server.com]:[port]"
-```
+![Screenshot Deck](screenshots/deck.png)
+![Screenshot New Deck](screenshots/new_deck.png)
+![Screenshot New Card](screenshots/new_card.png)
+![Screenshot Card](screenshots/card.png)
 
-Nahraďte:
+### Spaced Repetition
 
-- username, password, db_name – přihlašovací údaje k databázi PostgreSQL.
-- your_username, your_password – přihlašovací údaje k SMTP serveru (např. z Mailtrap).
-- smtp.server.com – adresa SMTP serveru.
-- port – port SMTP serveru (např. 2525 pro Mailtrap).
+![Screenshot Card](screenshots/study_card.png)
 
-## 4. Vytvoření databáze (pokud ještě neexistuje)
+### Weekly Goals
 
-```bash
-php bin/console doctrine:database:create
-```
+![Screenshot Goals](screenshots/goals.png)
 
-Tento příkaz vytvoří databázi podle nastavení ve vašem souboru .env.
+### Quiz Mode
 
-## 5. Spuštění migrací
+![Screenshot Quiz Result](screenshots/test_result.png)
 
-```bash
-php bin/console doctrine:migrations:migrate
-```
+### Progress Tracking
 
-## 6. Načtení dat z dumpu databáze
+![Screenshot Progress](screenshots/day_stats_js.png)
 
-Pro načtení pouze dat z předem připraveného SQL souboru spusťte:
+---
 
-```bash
-psql -f ..\test_data\dump_db.sql "postgresql://my_user:my_password@127.0.0.1:5432/my_database"
-```
+## Author
 
-Ujistěte se, že cesta k souboru a údaje k databázi odpovídají vaší konfiguraci.
-
-## 7. Spuštění vývojového serveru
-
-```bash
-php -S localhost:8080 -t public/
-```
-
-## 8. Spuštění fronty (Messenger Consumer)
-
-Symfony používá Messenger pro asynchronní zpracování úloh. Spusťte posluchače:
-
-```bash
-php bin/console messenger:consume async scheduler_expired_goals_schedule -vv
-```
-
-## 9. Přednastavení uživatelé
-
-Po načtení dat z dumpu budou v systému k dispozici následující uživatelé:
-
-| Uživatelské jméno | Heslo     | Role       |
-| ----------------- | --------- | ---------- |
-| `admin`           | `admin`   | ROLE_ADMIN |
-| `petra_n91`       | `petra91` | ROLE_USER  |
-| `tomik_d87`       | `tomik87` | ROLE_USER  |
-| `funt_14`         | `funt14`  | ROLE_USER  |
+This project was created as a **Bachelor’s thesis** in the field of **Web Engineering**.  
+Author: Sugako Aleksandra
